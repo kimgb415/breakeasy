@@ -1,0 +1,14 @@
+.sliderContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+}
+
+.slider {
+  flex-grow: 1;
+}
+
+.areaValue {
+  font-weight: bold;
+}

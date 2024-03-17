@@ -1,0 +1,15 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adjust the space between sliders */
+  padding: 20px;
+  border-radius: 8px; /* Rounded corners */
+  max-width: 400px; /* Adjust based on your preference */
+  margin: auto; /* Center the panel */
+}
+
+.roundIndex {
+  text-align: center;
+  margin-bottom: 10px; /* Adjust as needed */
+  font-weight: bold;
+}
