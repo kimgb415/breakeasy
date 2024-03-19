@@ -72,6 +72,7 @@ const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
   return (
     <div>
       <h1 className={styles.matchName}>Team {leftTeam} VS Team {rightTeam}</h1>
+      <h1 className={styles.matchName}>Total {matchSummary['Total'][0]} vs {matchSummary['Total'][1]}</h1>
       {rounds.map(round => (
         <RoundScorePanel 
           key={round.id}
