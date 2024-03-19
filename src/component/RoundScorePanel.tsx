@@ -18,10 +18,12 @@ const RoundScorePanel = ({roundIndex, areas, reportRoundScores}) => {
 
     return (
         <div className={styles.panel}>
-             <h2 className={styles.roundIndex}>Round {roundIndex}</h2>
-            <HorizontalScroll area="Attitude" onValueChange={handleValueChange}/>
-            <HorizontalScroll area="Musicality" onValueChange={handleValueChange}/>
-            <HorizontalScroll area="Dynamic" onValueChange={handleValueChange}/>
+            <h2 className={styles.roundIndex}>Round {roundIndex}</h2>
+            {
+                areas.map(area => (
+                    <HorizontalScroll area={area} onValueChange={handleValueChange}/>
+                ), {})
+            }
         </div>
     )
 }
