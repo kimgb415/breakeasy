@@ -9,23 +9,29 @@ interface RoundScorePanelProps {
 };
 
 const RoundScorePanel : React.FC<RoundScorePanelProps> = ({roundStatus, onRoundValueChange}) => {
-    const [areaScores, setAreaScores] = useState(() => 
-        roundStatus.areas.reduce((acc, area) => ({ ...acc, [area.areaName]: 50 }), {})
-    );
+    const [currentRoundStatus, setCurrentRoundStatus] = useState(roundStatus);
 
     const handleValueChange = (area, score) => {
-        setAreaScores(prev => ({ ...prev, [area]: score }));
+        setCurrentRoundStatus(prev => {
+            return {
+            ...prev,
+            areas: {
+                ...prev.areas,
+                [area]: score,
+            },
+        };
+        });
     };
 
     useEffect(() => {
-        onRoundValueChange(roundStatus.index, areaScores);
-    }, [areaScores]);
+        onRoundValueChange(roundStatus.index, currentRoundStatus);
+    }, [currentRoundStatus]);
 
     return (
         <div className={styles.panel}>
             <h2 className={styles.roundIndex}>Round {roundStatus.index}</h2>
             {
-                roundStatus.areas.map(area => <HorizontalScroll areaScore={area} onValueChange={handleValueChange}/>, {})
+                Object.entries(roundStatus.areas).map(area => <HorizontalScroll areaName={area[0]} score={area[1]} onValueChange={handleValueChange}/>)
             }
         </div>
     )

@@ -5,42 +5,67 @@ import styles from './MatchUpSummary.module.css';
 import { MatchData } from '@/type/MatchDataDef';
 
 const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, rounds, areas}) => {
-  console.log(areas)
-  const [matchSummary, setMatchSummary] = useState({
+  const areaSummary = {
     ...areas.reduce((acc, area) => {
-      acc[area] = [50 * rounds.length, 50 * rounds.length];
-
+      acc[area] = [
+        // Accumulation of each Area for Left Team
+        rounds.reduce((roundAcc, round) => {
+          roundAcc += round.areas[area].currentScore;
+          
+          return roundAcc;
+        }, 0),
+        // Accumulation of each Area for Right Team
+        rounds.reduce((roundAcc, round) => {
+          roundAcc += round.areas[area].maxScore - round.areas[area].currentScore;
+          
+          return roundAcc;
+        }, 0),
+      ];
+      
       return acc;
     }, {}),
-    'Total': [50 * rounds.length * areas.length, 50 * rounds.length * areas.length]
-  });
-  const [roundReports, setRoundReports] = useState(Object);
+  }
+  
+  // matchSummary contains only accumulated inforatimon
+  const [matchSummary, setMatchSummary] = useState({
+    ...areaSummary,
+    'Total': 
+      Object.values(areaSummary).reduce((acc, areaScoreList) => {
+        acc[0] += areaScoreList[0]
+        acc[1] += areaScoreList[1]
 
+        return acc
+      }, [0, 0])
+  });
+
+  
+  // roundReports contains all individual report status
+  const [roundReports, setRoundReports] = useState(rounds);
+  
   const handleRoundReport = (roundId, roundTotalScores) => {
     setRoundReports(prev => ({...prev, [roundId]: roundTotalScores}));
   };
   
   useEffect(() => {
     const areaSummary = areas.reduce((acc, area) => {
-      acc[area] = [0, 100 * rounds.length];
+      acc[area] = [0, 0];
       Object.values(roundReports).forEach(roundScore => {
-        acc[area][0] += roundScore[area]; // Left Team
-        acc[area][1] -= roundScore[area]; // Right Team
+        acc[area][0] += roundScore.areas[area].currentScore; // Left Team
+        acc[area][1] += roundScore.areas[area].maxScore - roundScore.areas[area].currentScore; // Right Team
       });
       
       return acc;
     }, {});
-    
-    let leftTeamTotal = 0, rightTeamTotal = 0;
-    Object.values(areaSummary).forEach(areaScores => {
-      leftTeamTotal += areaScores[0];
-      rightTeamTotal += areaScores[1];
-    });
-    
-    
+        
     setMatchSummary({
       ...areaSummary,
-      'Total': [leftTeamTotal, rightTeamTotal]
+      'Total': 
+        Object.values(areaSummary).reduce((acc, areaScoreList) => {
+          acc[0] += areaScoreList[0]
+          acc[1] += areaScoreList[1]
+
+          return acc
+        }, [0, 0])
     });
   }, [roundReports]);
   
@@ -59,7 +84,7 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
 
   return (
     <div>
-      <h1 className={styles.matchName}>Team {leftTeam} VS Team {rightTeam}</h1>
+      <h1 className={styles.matchName}>{leftTeam} VS {rightTeam}</h1>
       <h1 className={styles.matchName}>Total {matchSummary['Total'][0]} vs {matchSummary['Total'][1]}</h1>
       {rounds.map(round => (
         <RoundScorePanel 

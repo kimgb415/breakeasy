@@ -13,7 +13,6 @@ const MatchUpContainerTab = ({matchName}) => {
         const matchData : MatchData = await res.json();
         setData(matchData);
         
-        console.log(matchData);
         setIsLoading(false);
     }
     

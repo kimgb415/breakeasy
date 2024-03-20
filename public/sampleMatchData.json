@@ -1,0 +1,44 @@
+{
+  "matchName": "Example Match",
+  "leftTeam": "Team Alpha",
+  "rightTeam": "Team Beta",
+  "rounds": [
+    {
+      "index": 0,
+      "areas": {
+        "Attitude": {"currentScore": 0, "maxScore": 100},
+        "Musicality": {"currentScore": 0, "maxScore": 100},
+        "Dynamic": {"currentScore": 0, "maxScore": 100},
+        "Unity": {"currentScore": 0, "maxScore": 100}
+      }
+    },
+    {
+      "index": 1,
+      "areas": {
+        "Attitude": {"currentScore": 0, "maxScore": 100},
+        "Musicality": {"currentScore": 0, "maxScore": 100},
+        "Dynamic": {"currentScore": 0, "maxScore": 100},
+        "Unity": {"currentScore": 0, "maxScore": 100}
+      }
+    },
+    {
+      "index": 2,
+      "areas": {
+        "Attitude": {"currentScore": 0, "maxScore": 100},
+        "Musicality": {"currentScore": 0, "maxScore": 100},
+        "Dynamic": {"currentScore": 0, "maxScore": 100},
+        "Unity": {"currentScore": 0, "maxScore": 100}
+      }
+    },
+    {
+      "index": 3,
+      "areas": {
+        "Attitude": {"currentScore": 0, "maxScore": 100},
+        "Musicality": {"currentScore": 0, "maxScore": 100},
+        "Dynamic": {"currentScore": 0, "maxScore": 100},
+        "Unity": {"currentScore": 0, "maxScore": 100}
+      }
+    }
+  ],
+  "areas": ["Attitude", "Musicality", "Dynamic", "Unity"]
+}

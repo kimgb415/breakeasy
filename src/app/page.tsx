@@ -6,7 +6,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <MatchUpContainerTab matchName="sampleMatch"/>
+      <MatchUpContainerTab matchName="sampleMatchData"/>
     </div>
   );
 }

@@ -1,12 +1,15 @@
-export interface AreaScore {
-    areaName: string;
+export interface Score {
     currentScore: number;
     maxScore: number;
 }
 
+export interface AreaScore {
+    [areaName: string] : Score
+}
+
 export interface RoundReport {
     index: number;
-    areas: AreaScore[];
+    areas: AreaScore;
 }
 
 export interface MatchData {
