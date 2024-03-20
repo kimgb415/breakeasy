@@ -43,7 +43,16 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
   const [roundReports, setRoundReports] = useState(rounds);
   
   const handleRoundReport = (roundId, roundTotalScores) => {
-    setRoundReports(prev => ({...prev, [roundId]: roundTotalScores}));
+    setRoundReports(currReport => {
+      const changedRoundIndex = currReport.findIndex(round => round.index === roundId);
+
+      return [
+        ...currReport.slice(0, changedRoundIndex),
+        roundTotalScores,
+        ...currReport.slice(changedRoundIndex + 1)
+      ]
+    });
+    // setRoundReports(prev => ({...prev, [roundId]: roundTotalScores}));
   };
   
   useEffect(() => {
@@ -76,8 +85,14 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
       'Content-Type': 'application/json', // Specify the content type
     },
       body: JSON.stringify({
-        'roundReports': roundReports,
-        'matchSummary': matchSummary
+        'matchData': {
+          'matchName': matchName,
+          'leftTeam': leftTeam,
+          'rightTeam': rightTeam,
+          'rounds': roundReports,
+          'areas': areas
+        },
+        'summary': matchSummary
       }),
     });
   }, [matchSummary]);
@@ -86,12 +101,14 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
     <div>
       <h1 className={styles.matchName}>{leftTeam} VS {rightTeam}</h1>
       <h1 className={styles.matchName}>Total {matchSummary['Total'][0]} vs {matchSummary['Total'][1]}</h1>
-      {rounds.map(round => (
-        <RoundScorePanel 
-          key={round.index}
-          roundStatus={round}
-          onRoundValueChange={handleRoundReport}/>
-      ))}
+      {
+        rounds.map(round => (
+          <RoundScorePanel 
+            key={round.index}
+            roundStatus={round}
+            onRoundValueChange={handleRoundReport}/>
+        ))
+      }
     </div>
   );
 }
