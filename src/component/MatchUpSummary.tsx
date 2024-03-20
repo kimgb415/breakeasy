@@ -21,19 +21,6 @@ const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
   });
   const [roundReports, setRoundReports] = useState(Object);
 
-  const exportCsv = () => {
-    const csvRows = [
-      [`,Team ${leftTeam}`, `Team ${rightTeam}`],
-      ...Object.entries(matchSummary).map(([area, scores]) =>[area, ...scores].join(',')),
-    ];
-    const csvString = csvRows.join('\n');
-    console.log(csvString);
-    // // const blob = new Blob([csvString], { type: 'text/csv' });
-    // // const url = URL.createObjectURL(blob);
-    // // console.log(blob);
-    // // console.log(url);
-  }
-
   const handleRoundReport = (roundId, roundTotalScores) => {
     // Logic to sum up all panel volumes and setTotalVolume
     // This might involve keeping track of each panel's volume separately
@@ -48,25 +35,34 @@ const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
         acc[area][0] += roundScore[area]; // Left Team
         acc[area][1] -= roundScore[area]; // Right Team
       });
-
+      
       return acc;
     }, {});
-
+    
     let leftTeamTotal = 0, rightTeamTotal = 0;
     Object.values(areaSummary).forEach(areaScores => {
       leftTeamTotal += areaScores[0];
       rightTeamTotal += areaScores[1];
     });
-
-
+    
+    
     setMatchSummary({
       ...areaSummary,
       'Total': [leftTeamTotal, rightTeamTotal]
     });
   }, [roundReports]);
-
+  
   useEffect(() => {
-    exportCsv();
+    fetch('/api/', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json', // Specify the content type
+    },
+      body: JSON.stringify({
+        'roundReports': roundReports,
+        'matchSummary': matchSummary
+      }),
+    });
   }, [matchSummary]);
 
   return (
