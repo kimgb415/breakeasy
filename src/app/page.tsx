@@ -1,14 +1,12 @@
 'use client'
 import React from 'react';
-import HorizontalScroll from '../component/HorizontalScroll';
-import RoundScorePanel from '@/component/RoundScorePanel';
-import MatchUpSummary from '@/component/MatchUpSummary';
+import MatchUpContainerTab from '@/component/MatchUpContainerTab';
 
 const HomePage = () => {
 
   return (
     <div>
-      <MatchUpSummary/>
+      <MatchUpContainerTab matchName="sampleMatch"/>
     </div>
   );
 }

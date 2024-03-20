@@ -2,14 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 import fs from 'fs';
 import path from 'path';
  
-export const dynamic = 'force-dynamic' // defaults to auto
-export function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const query = searchParams.get('query')
-  // query is "hello" for /api/search?query=hello
-
-}
-
 
 const exportCsv = summary => {
   const csvRows = [

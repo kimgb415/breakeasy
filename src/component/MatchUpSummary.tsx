@@ -2,15 +2,10 @@
 import React, {useEffect, useState} from 'react';
 import RoundScorePanel from '@/component/RoundScorePanel';
 import styles from './MatchUpSummary.module.css';
+import { MatchData } from '@/type/MatchDataDef';
 
-
-const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
-  const areas = ['Attitude', 'Musicality', 'Dynamic', 'Unity'];
-  const rounds = [
-    { id: 1, index: 1, areas : areas},
-    { id: 2, index: 2, areas : areas}
-  ];
-
+const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, rounds, areas}) => {
+  console.log(areas)
   const [matchSummary, setMatchSummary] = useState({
     ...areas.reduce((acc, area) => {
       acc[area] = [50 * rounds.length, 50 * rounds.length];
@@ -22,9 +17,6 @@ const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
   const [roundReports, setRoundReports] = useState(Object);
 
   const handleRoundReport = (roundId, roundTotalScores) => {
-    // Logic to sum up all panel volumes and setTotalVolume
-    // This might involve keeping track of each panel's volume separately
-    // and then summing those to find the overall totalVolume
     setRoundReports(prev => ({...prev, [roundId]: roundTotalScores}));
   };
   
@@ -71,10 +63,9 @@ const MatchUpSummary = ({leftTeam = 'A', rightTeam='B'}) => {
       <h1 className={styles.matchName}>Total {matchSummary['Total'][0]} vs {matchSummary['Total'][1]}</h1>
       {rounds.map(round => (
         <RoundScorePanel 
-          key={round.id}
-          roundIndex={round.index} 
-          areas={round.areas}
-          reportRoundScores={handleRoundReport}/>
+          key={round.index}
+          roundStatus={round}
+          onRoundValueChange={handleRoundReport}/>
       ))}
     </div>
   );
