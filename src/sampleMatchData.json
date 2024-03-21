@@ -1,7 +1,7 @@
 {
   "matchName": "Example Match",
-  "leftTeam": "Team Alpha",
-  "rightTeam": "Team Beta",
+  "leftTeam": "Team Left",
+  "rightTeam": "Team Right",
   "rounds": [
     {
       "index": 0,
