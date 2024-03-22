@@ -1,8 +1,24 @@
 'use client'
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import RoundScorePanel from '@/component/RoundScorePanel';
 import styles from './MatchUpSummary.module.css';
 import { MatchData } from '@/type/MatchDataDef';
+import { getDatabase, ref, set } from "firebase/database";
+import { app } from "@/app/firebase";
+
+function debounce(func, wait) {
+  let timeout;
+
+  return function exectuedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    }
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  }
+}
 
 const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, rounds, areas}) => {
   const areaSummary = {
@@ -37,7 +53,8 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
         return acc
       }, [0, 0])
   });
-
+  const matchSummaryRef = useRef({});
+  const roundReportRef = useRef(rounds);
   
   // roundReports contains all individual report status
   const [roundReports, setRoundReports] = useState(rounds);
@@ -52,7 +69,6 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
         ...currReport.slice(changedRoundIndex + 1)
       ]
     });
-    // setRoundReports(prev => ({...prev, [roundId]: roundTotalScores}));
   };
   
   useEffect(() => {
@@ -77,29 +93,41 @@ const MatchUpSummary : React.FC<MatchData>  = ({matchName, leftTeam, rightTeam, 
         }, [0, 0])
     });
   }, [roundReports]);
+
+  const updateMatchToDb = () => {
+    
+    const newMatchData = {
+      'matchData': {
+        'matchName': matchName,
+        'leftTeam': leftTeam,
+        'rightTeam': rightTeam,
+        'rounds': roundReportRef.current,
+        'areas': areas
+      },
+      'summary': matchSummaryRef.current
+    }
+    console.log(`update match ${matchName} to DB`)
+    console.log(newMatchData)
+    
+    const db = getDatabase(app);
+    set(ref(db, matchName), newMatchData);
+  }
+
+  // Use useRef to store the debounced version of updateMatchToServer
+  const debouncedUpdate = useRef(debounce(updateMatchToDb, 500));
+
+  useEffect(() => {
+    roundReportRef.current = roundReports; // Update ref whenever roundReports changes
+  }, [roundReports]);
   
   useEffect(() => {
-    fetch('/api/', {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json', // Specify the content type
-    },
-      body: JSON.stringify({
-        'matchData': {
-          'matchName': matchName,
-          'leftTeam': leftTeam,
-          'rightTeam': rightTeam,
-          'rounds': roundReports,
-          'areas': areas
-        },
-        'summary': matchSummary
-      }),
-    });
+    matchSummaryRef.current = matchSummary; // Update ref whenever matchSummary changes
+    debouncedUpdate.current();
   }, [matchSummary]);
 
   return (
     <div>
-      <h1 className={styles.matchName}>{leftTeam} VS {rightTeam}</h1>
+      <h1 className={styles.matchName}>Match {matchName}</h1>
       <h1 className={styles.matchName}>Total {matchSummary['Total'][0]} vs {matchSummary['Total'][1]}</h1>
       {
         rounds.map(round => (

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import MatchUpContainerTab from '@/component/MatchUpContainerTab';
 
 const HomePage = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [
     { id: 1, title: "8-1", content : <MatchUpContainerTab matchName="8-1"/>},
@@ -19,7 +19,7 @@ const HomePage = () => {
      <div>
       <ul style={{ listStyleType: 'none', padding: 0 }}>
         {tabs.map(tab => (
-          <li key={tab.id} style={{ display: 'inline', marginRight: '20px', cursor: 'pointer' }}
+          <li key={tab.id} style={{ display: 'inline', marginRight: '20px', cursor: 'pointer', color: activeTab === tab.id ? 'red' : 'white' }}
               onClick={() => setActiveTab(tab.id)}>
             {tab.title}
           </li>
