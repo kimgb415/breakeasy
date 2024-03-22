@@ -1,7 +1,5 @@
 {
   "hosting": {
-    "site": "breakeasy",
-    "public": "public",
     "source": ".",
     "ignore": [
       "firebase.json",
